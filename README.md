@@ -12,7 +12,7 @@ loads React 18 from a CDN (unpkg) and renders the page. No build step, no npm in
 
 - Fonts: Google Fonts (loaded via CDN)
 - React/ReactDOM: unpkg CDN (also preloaded in each page's `<head>`)
-- Images: `assets/`
+- Images: repo root, alongside the HTML files
 - Contact form: posts to Formspree (`https://formspree.io/f/xgojlkpn`)
 
 ## Run locally
@@ -44,4 +44,4 @@ This is a zero-config static site.
 - **Internet required at runtime** for the React CDN and Google Fonts (standard for most sites).
 - **Contact form:** submissions go to the Formspree form `xgojlkpn`. Before it delivers email,
   submit once and confirm the activation email Formspree sends to the form owner's address.
-- Keep `support.js` and the `assets/` folder alongside the HTML files — they're required.
+- Keep `support.js` and the image `.png` files alongside the HTML files — they're required.
