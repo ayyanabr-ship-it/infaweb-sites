@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="InfaWeb designs immersive, conversion-focused websites for growing businesses. Ontario Summer Company program.">
+<meta name="theme-color" content="#03131f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='54' r='32' fill='%237fe9ff'/%3E%3Ccircle cx='41' cy='44' r='8' fill='%23eafeff'/%3E%3C/svg%3E">
+<title>InfaWeb — Websites Built for Growth</title>
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Baloo+2:wght@500;600;700;800&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>
+/* ===== INFAWEB cross-page bubble-rise transition (vanilla, identical on every page) ===== */
+(function(){
+  if(window.__infawebX) return; window.__infawebX=1;
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+  function veil(){ var c=document.createElement('canvas'); c.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:2147483600;pointer-events:auto;'; document.documentElement.appendChild(c); return c; }
+  function run(mode, done){
+    var c=veil(), x=c.getContext('2d'), W=0,H=0;
+    function size(){ W=window.innerWidth; H=window.innerHeight; c.width=W*DPR; c.height=H*DPR; x.setTransform(DPR,0,0,DPR,0,0); }
+    size(); window.addEventListener('resize',size);
+    var bubbles=[]; for(var i=0;i<90;i++){ bubbles.push({x:Math.random()*W, y:H+Math.random()*H*0.7, r:4+Math.random()*22, sp:1.6+Math.random()*3.4, w:Math.random()*6.28, amp:8+Math.random()*26}); }
+    var DUR=820, t0=performance.now();
+    function frame(now){
+      var u=(now-t0)/DUR; if(u>1)u=1;
+      var cover = mode==='cover' ? u : 1-u;
+      var ease = cover<0.5 ? 2*cover*cover : 1-Math.pow(-2*cover+2,2)/2;
+      x.clearRect(0,0,W,H);
+      var top=H*(1-ease);
+      var g=x.createLinearGradient(0,top,0,H); g.addColorStop(0,'rgba(10,52,78,0.92)'); g.addColorStop(0.5,'rgba(6,34,58,0.97)'); g.addColorStop(1,'rgba(3,18,34,1)');
+      x.fillStyle=g; x.fillRect(0,top,W,H-top);
+      x.fillStyle=g;
+      x.beginPath(); x.moveTo(0,top);
+      for(var sx=0;sx<=W;sx+=46){ var bob=Math.sin(sx*0.03+now*0.004)*10 - 16; x.lineTo(sx,top+bob); x.arc(sx+23,top+bob,23,Math.PI,0,true); }
+      x.lineTo(W,H); x.lineTo(0,H); x.closePath(); x.fill();
+      var dt = mode==='cover'?1:0.7;
+      for(var i=0;i<bubbles.length;i++){ var b=bubbles[i]; b.y-=b.sp*dt*2.0; var bx=b.x+Math.sin(b.y*0.02+b.w)*b.amp*0.25;
+        x.beginPath(); x.arc(bx,b.y,b.r,0,6.283); x.fillStyle='rgba(120,200,235,0.10)'; x.fill();
+        x.lineWidth=1.4; x.strokeStyle='rgba(170,228,250,0.6)'; x.stroke();
+        x.beginPath(); x.arc(bx-b.r*0.3,b.y-b.r*0.32,b.r*0.22,0,6.283); x.fillStyle='rgba(235,250,255,0.6)'; x.fill();
+        if(b.y<-b.r){ b.y=H+b.r; b.x=Math.random()*W; }
+      }
+      if(u>=1){ window.removeEventListener('resize',size); if(mode==='cover'){ done&&done(); } else { c.remove(); document.documentElement.style.overflow=''; document.body.style.overflow=''; } return; }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  try{ if(sessionStorage.getItem('infaweb_xfade')==='1'){ sessionStorage.removeItem('infaweb_xfade'); document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden'; run('reveal'); } }catch(e){}
+  document.addEventListener('click', function(e){
+    var a=e.target.closest && e.target.closest('a[data-xnav]'); if(!a) return;
+    var href=a.getAttribute('href'); if(!href||href.charAt(0)==='#') return;
+    e.preventDefault(); if(window.__infawebXgo) return; window.__infawebXgo=1;
+    try{ sessionStorage.setItem('infaweb_xfade','1'); }catch(err){}
+    document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden';
+    run('cover', function(){ window.location.href=href; });
+  }, true);
+})();
+</script>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#04050c;}
+  body{overscroll-behavior:none;}
+  ::selection{background:rgba(0,229,255,.28);color:#eaffff;}
+  input::placeholder{color:rgba(190,225,255,.34);}
+  @keyframes infaFog{0%{transform:translateX(-7%);}100%{transform:translateX(7%);}}
+  @keyframes infaFog2{0%{transform:translateX(6%);}100%{transform:translateX(-6%);}}
+  @keyframes infaBeam{0%,100%{opacity:.26;transform:translateX(-3%) skewX(-13deg);}50%{opacity:.54;transform:translateX(3%) skewX(-13deg);}}
+  @keyframes infaRay{0%,100%{opacity:.18;transform:translateX(-2%) skewX(8deg);}50%{opacity:.5;transform:translateX(2%) skewX(8deg);}}
+  @keyframes infaHintDot{0%{transform:translateY(0);opacity:0;}25%{opacity:1;}100%{transform:translateY(22px);opacity:0;}}
+  @keyframes infaHintText{0%,100%{opacity:.42;}50%{opacity:.92;}}
+  @keyframes infaNav{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes infaFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+  @keyframes infaCaustic{0%{transform:translate(0,0) scale(1);opacity:.5;}50%{transform:translate(3%,2%) scale(1.08);opacity:.85;}100%{transform:translate(0,0) scale(1);opacity:.5;}}
+  @keyframes infaPulse{0%,100%{opacity:.55;}50%{opacity:1;}}
+  @keyframes infaSubIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+  .brd::placeholder{color:rgba(240,226,192,.42);}
+  /* ===== responsive system ===== */
+  .nav-burger{ display:none; flex-direction:column; gap:5px; width:46px; height:46px; align-items:center; justify-content:center; background:transparent; border:none; cursor:pointer; }
+  .nav-burger span{ display:block; width:25px; height:2px; border-radius:2px; background:#d4ecff; box-shadow:0 0 8px rgba(127,233,255,.55); }
+  @media(max-width:1023px){
+    [data-panel].wp-c{ display:none !important; }
+    [data-panel].wp-e{ width:178px !important; }
+    .hero-img{ object-fit:contain !important; object-position:center 47% !important; }
+    .hero-blur{ display:none !important; }
+    [data-world="0"]{ background:linear-gradient(180deg,#001527 0%,#001527 30%,#01101f 54%,#010c1a 76%,#010c1a 100%) !important; }
+    .hero-feather{ display:block !important; }
+  }
+  @media(max-width:767px){
+    .nav-links{ display:none !important; }
+    .nav-burger{ display:flex !important; }
+    [data-layer="w0sub"]{ top:auto !important; bottom:17% !important; gap:12px !important; padding:0 22px !important; }
+    .hero-badge{ max-width:90vw !important; }
+    [data-panel].wp-e{ width:142px !important; }
+    [data-panel].wp-tl{ left:4% !important; top:16% !important; }
+    [data-panel].wp-tr{ right:4% !important; top:14% !important; }
+    [data-panel].wp-bl{ left:4% !important; bottom:23% !important; }
+    [data-panel].wp-br{ right:4% !important; bottom:25% !important; }
+    [data-layer="claritybody"]{ flex-direction:column !important; align-items:stretch !important; justify-content:flex-start !important; gap:0 !important; padding:152px 16px 46px !important; overflow-y:auto !important; -webkit-overflow-scrolling:touch !important; }
+    .c-left{ display:none !important; }
+    .c-board{ width:100% !important; min-width:0 !important; align-self:center !important; margin-top:8px !important; }
+    .c-plank{ width:100% !important; max-width:360px !important; margin:0 auto !important; padding:28px 22px 30px !important; }
+    .brd{ height:46px !important; font-size:16px !important; }
+    .nav-dots{ right:14px !important; gap:9px !important; }
+  }
+  @media(max-width:380px){
+    .c-plank{ padding:24px 18px 26px !important; }
+    [data-panel].wp-e{ width:126px !important; }
+  }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" data-screen-label="INFAWEB immersive experience" style="position:fixed;inset:0;width:100%;height:100%;overflow:hidden;background:#04050c;font-family:'Space Grotesk',sans-serif;">
+
+  <div ref="{{ stageRef }}" style="position:absolute;inset:0;overflow:hidden;">
+
+    <!-- ============ WORLD 0 — ARRIVAL ============ -->
+    <div data-world="0" style="position:absolute;inset:0;overflow:hidden;background:linear-gradient(180deg,#00030a 0%,#00030a 31%,#02070f 69%,#03091a 100%);">
+      <img aria-hidden="true" src="assets/hero-still.png" alt="" class="hero-blur" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.18);filter:blur(46px) saturate(1.12) brightness(0.7);opacity:1;">
+      <img ref="{{ vidRef }}" src="assets/hero-still.png" alt="InfaWeb" class="hero-img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;">
+      <div class="hero-feather" style="display:none;position:absolute;top:0;left:0;right:0;height:40%;pointer-events:none;background:linear-gradient(180deg,#001527 0%,#001527 22%,rgba(0,20,37,.55) 60%,transparent 100%);"></div>
+      <div class="hero-feather" style="display:none;position:absolute;bottom:0;left:0;right:0;height:38%;pointer-events:none;background:linear-gradient(0deg,#010c1a 0%,#010c1a 20%,rgba(1,12,26,.55) 58%,transparent 100%);"></div>
+      <canvas ref="{{ glRef }}" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+
+      <div data-layer="grade3" style="position:absolute;inset:0;opacity:0;background:radial-gradient(110% 75% at 50% 64%, rgba(0,46,66,.30), rgba(6,8,18,.78) 80%);"></div>
+      <div data-depth="1.6" style="position:absolute;top:-22%;left:38%;width:26%;height:150%;background:linear-gradient(90deg, transparent, rgba(120,200,255,.10), transparent);filter:blur(22px);transform:skewX(-13deg);animation:infaBeam 9s ease-in-out infinite;"></div>
+      <div data-depth="1.2" style="position:absolute;top:-22%;left:14%;width:18%;height:150%;background:linear-gradient(90deg, transparent, rgba(139,92,255,.07), transparent);filter:blur(26px);transform:skewX(-13deg);animation:infaBeam 13s ease-in-out infinite;animation-delay:-4s;"></div>
+      <div style="position:absolute;left:-12%;right:-12%;bottom:-2%;height:52%;background:linear-gradient(180deg, transparent, rgba(120,160,225,.09) 58%, rgba(150,190,245,.18));filter:blur(34px);animation:infaFog 19s ease-in-out infinite alternate;"></div>
+      <div style="position:absolute;left:-12%;right:-12%;bottom:18%;height:34%;background:linear-gradient(180deg, transparent, rgba(90,130,210,.07) 60%, rgba(120,160,235,.12));filter:blur(46px);animation:infaFog2 27s ease-in-out infinite alternate;"></div>
+      <div style="position:absolute;inset:0;background:transparent;"></div>
+
+      <div data-layer="w0sub" style="position:absolute;left:0;right:0;top:71%;display:flex;flex-direction:column;align-items:center;gap:15px;text-align:center;padding:0 8vw;pointer-events:none;opacity:1;z-index:6;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:clamp(12px,1.25vw,15px);letter-spacing:.4em;text-transform:uppercase;color:rgba(212,236,255,.82);text-shadow:0 1px 2px rgba(0,15,30,.9), 0 0 22px rgba(70,160,255,.22);">Websites built for growth</span>
+        <div class="hero-badge" style="display:inline-flex;align-items:center;gap:9px;padding:7px 16px 7px 13px;border-radius:999px;background:rgba(10,26,46,.4);border:1px solid rgba(150,200,255,.22);backdrop-filter:blur(8px);box-shadow:0 6px 22px rgba(0,20,50,.28);">
+          <span style="width:7px;height:7px;border-radius:50%;background:#7fe9ff;box-shadow:0 0 9px rgba(127,233,255,.9);"></span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(9.5px,0.92vw,11px);letter-spacing:.13em;text-transform:uppercase;color:rgba(206,228,255,.82);">Supported by the Ontario Summer Company Program</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============ WORLD 1 — CONFUSION ============ -->
+    <div data-world="1" style="position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;background:radial-gradient(120% 110% at 50% 18%, #0b1024 0%, #070a18 46%, #03040c 100%);">
+      <div style="position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 40%, rgba(40,70,150,.10), transparent 70%);"></div>
+      <div style="position:absolute;left:-10%;right:-10%;top:30%;height:40%;background:linear-gradient(180deg,transparent,rgba(60,90,170,.06),transparent);filter:blur(50px);animation:infaFog 24s ease-in-out infinite alternate;"></div>
+
+      <!-- floating decision panels -->
+      <div data-depth="3.4" data-panel class="wp-e wp-tl" style="position:absolute;left:7%;top:20%;width:230px;animation:infaFloat 9s ease-in-out infinite;">
+        <div style="border-radius:14px;padding:16px;background:rgba(14,20,42,.5);border:1px solid rgba(120,170,255,.16);backdrop-filter:blur(10px);box-shadow:0 20px 50px rgba(0,0,0,.4);transition:transform .3s,border-color .3s;" style-hover="transform:scale(1.04);border-color:rgba(0,229,255,.4);">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(0,229,255,.6);margin-bottom:12px;">Wireframe</div>
+          <div style="display:flex;flex-direction:column;gap:7px;"><div style="height:9px;width:70%;border-radius:3px;background:rgba(150,180,255,.22);"></div><div style="height:34px;border-radius:5px;background:rgba(150,180,255,.12);"></div><div style="display:flex;gap:6px;"><div style="height:9px;flex:1;border-radius:3px;background:rgba(150,180,255,.18);"></div><div style="height:9px;flex:1;border-radius:3px;background:rgba(150,180,255,.18);"></div></div></div>
+        </div>
+      </div>
+
+      <div data-depth="2.2" data-panel class="wp-e wp-tr" style="position:absolute;right:9%;top:16%;width:210px;animation:infaFloat 11s ease-in-out infinite;animation-delay:-3s;">
+        <div style="border-radius:14px;padding:16px;background:rgba(14,20,42,.5);border:1px solid rgba(120,170,255,.16);backdrop-filter:blur(10px);box-shadow:0 20px 50px rgba(0,0,0,.4);transition:transform .3s,border-color .3s;" style-hover="transform:scale(1.04);border-color:rgba(0,229,255,.4);">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(0,229,255,.6);margin-bottom:12px;">Palette</div>
+          <div style="display:flex;gap:8px;"><div style="width:30px;height:30px;border-radius:50%;background:#3A7BFF;"></div><div style="width:30px;height:30px;border-radius:50%;background:#00E5FF;"></div><div style="width:30px;height:30px;border-radius:50%;background:#8B5CFF;"></div><div style="width:30px;height:30px;border-radius:50%;background:#2fd4d4;"></div></div>
+          <div style="margin-top:10px;font-family:'Space Grotesk',sans-serif;font-size:10px;color:rgba(190,210,255,.4);">#3A7BFF &middot; #00E5FF &middot; #8B5CFF</div>
+        </div>
+      </div>
+
+      <div data-depth="3.0" data-panel class="wp-e wp-bl" style="position:absolute;left:11%;bottom:18%;width:200px;animation:infaFloat 10s ease-in-out infinite;animation-delay:-1.5s;">
+        <div style="border-radius:14px;padding:16px;background:rgba(14,20,42,.5);border:1px solid rgba(120,170,255,.16);backdrop-filter:blur(10px);box-shadow:0 20px 50px rgba(0,0,0,.4);transition:transform .3s,border-color .3s;" style-hover="transform:scale(1.04);border-color:rgba(0,229,255,.4);">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(0,229,255,.6);margin-bottom:10px;">Typography</div>
+          <div style="font-family:'Chewy',cursive;font-size:30px;color:rgba(225,235,255,.82);line-height:1;">Aa</div>
+          <div style="margin-top:8px;font-family:'Space Grotesk',sans-serif;font-size:10px;color:rgba(190,210,255,.42);">Display &middot; Serif &middot; Mono?</div>
+        </div>
+      </div>
+
+      <div data-depth="2.6" data-panel class="wp-e wp-br" style="position:absolute;right:11%;bottom:20%;width:220px;animation:infaFloat 12s ease-in-out infinite;animation-delay:-5s;">
+        <div style="border-radius:14px;padding:16px;background:rgba(14,20,42,.5);border:1px solid rgba(120,170,255,.16);backdrop-filter:blur(10px);box-shadow:0 20px 50px rgba(0,0,0,.4);transition:transform .3s,border-color .3s;" style-hover="transform:scale(1.04);border-color:rgba(0,229,255,.4);">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(0,229,255,.6);margin-bottom:12px;">Analytics</div>
+          <div style="display:flex;align-items:flex-end;gap:5px;height:46px;"><div style="flex:1;height:40%;border-radius:3px 3px 0 0;background:rgba(0,229,255,.4);"></div><div style="flex:1;height:65%;border-radius:3px 3px 0 0;background:rgba(0,229,255,.3);"></div><div style="flex:1;height:30%;border-radius:3px 3px 0 0;background:rgba(0,229,255,.45);"></div><div style="flex:1;height:80%;border-radius:3px 3px 0 0;background:rgba(0,229,255,.25);"></div><div style="flex:1;height:52%;border-radius:3px 3px 0 0;background:rgba(0,229,255,.4);"></div></div>
+        </div>
+      </div>
+
+      <div data-depth="1.8" data-panel class="wp-c" style="position:absolute;left:30%;top:13%;width:180px;animation:infaFloat 13s ease-in-out infinite;animation-delay:-2s;">
+        <div style="border-radius:12px;padding:13px 15px;background:rgba(14,20,42,.45);border:1px solid rgba(120,170,255,.14);backdrop-filter:blur(8px);box-shadow:0 16px 40px rgba(0,0,0,.36);transition:transform .3s,border-color .3s;" style-hover="transform:scale(1.04);border-color:rgba(0,229,255,.4);">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(0,229,255,.55);margin-bottom:8px;">Domain</div>
+          <div style="font-family:'Baloo 2',sans-serif;font-weight:600;font-size:14px;color:rgba(220,232,255,.78);">yoursite<span style="color:rgba(120,150,210,.55);">.com?</span></div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;color:rgba(190,210,255,.36);margin-top:3px;">.io &middot; .co &middot; .studio</div>
+        </div>
+      </div>
+
+      <div data-depth="2.0" data-panel class="wp-c" style="position:absolute;right:30%;top:11%;width:165px;animation:infaFloat 9.5s ease-in-out infinite;animation-delay:-6s;">
+        <div style="border-radius:12px;padding:13px 15px;background:rgba(14,20,42,.45);border:1px solid rgba(120,170,255,.14);backdrop-filter:blur(8px);box-shadow:0 16px 40px rgba(0,0,0,.36);transition:transform .3s,border-color .3s;" style-hover="transform:scale(1.04);border-color:rgba(0,229,255,.4);">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(0,229,255,.55);margin-bottom:8px;">SEO</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;"><span style="font-size:10px;padding:3px 7px;border-radius:6px;background:rgba(0,229,255,.1);color:rgba(190,235,255,.7);">keywords</span><span style="font-size:10px;padding:3px 7px;border-radius:6px;background:rgba(0,229,255,.1);color:rgba(190,235,255,.7);">backlinks</span><span style="font-size:10px;padding:3px 7px;border-radius:6px;background:rgba(0,229,255,.1);color:rgba(190,235,255,.7);">meta?</span></div>
+        </div>
+      </div>
+
+      <div data-depth="2.8" data-panel class="wp-c" style="position:absolute;left:33%;bottom:13%;width:175px;animation:infaFloat 11.5s ease-in-out infinite;animation-delay:-4s;">
+        <div style="border-radius:12px;padding:13px 15px;background:rgba(14,20,42,.45);border:1px solid rgba(120,170,255,.14);backdrop-filter:blur(8px);box-shadow:0 16px 40px rgba(0,0,0,.36);transition:transform .3s,border-color .3s;" style-hover="transform:scale(1.04);border-color:rgba(0,229,255,.4);">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(0,229,255,.55);margin-bottom:8px;">Hosting</div>
+          <div style="font-family:'Baloo 2',sans-serif;font-weight:600;font-size:13px;color:rgba(220,232,255,.74);">Which one?</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;color:rgba(190,210,255,.36);margin-top:3px;">shared &middot; cloud &middot; VPS</div>
+        </div>
+      </div>
+
+      <div data-depth="1.6" data-panel class="wp-c" style="position:absolute;right:32%;bottom:14%;width:185px;animation:infaFloat 12.5s ease-in-out infinite;animation-delay:-7s;">
+        <div style="border-radius:12px;padding:13px 15px;background:rgba(14,20,42,.45);border:1px solid rgba(120,170,255,.14);backdrop-filter:blur(8px);box-shadow:0 16px 40px rgba(0,0,0,.36);transition:transform .3s,border-color .3s;" style-hover="transform:scale(1.04);border-color:rgba(0,229,255,.4);">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(0,229,255,.55);margin-bottom:8px;">Marketing</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:11px;color:rgba(200,220,255,.6);line-height:1.5;">CPC &middot; funnels &middot; retargeting &middot; CRO &middot; ROAS</div>
+        </div>
+      </div>
+
+      <!-- environmental typography -->
+      <div data-q="0" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8vw;opacity:0;pointer-events:none;"><h2 style="margin:0;font-family:'Chewy',cursive;font-weight:400;font-size:clamp(40px,8vw,118px);line-height:1;color:#fff;text-shadow:0 4px 60px rgba(0,40,80,.7);">Where do I start?</h2></div>
+      <div data-q="1" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8vw;opacity:0;pointer-events:none;"><h2 style="margin:0;font-family:'Chewy',cursive;font-weight:400;font-size:clamp(38px,7vw,104px);line-height:1.04;color:#fff;text-shadow:0 4px 60px rgba(0,40,80,.7);">What platform<br>should I use?</h2></div>
+      <div data-q="2" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8vw;opacity:0;pointer-events:none;"><h2 style="margin:0;font-family:'Chewy',cursive;font-weight:400;font-size:clamp(36px,6.6vw,96px);line-height:1.04;color:#fff;text-shadow:0 4px 60px rgba(0,40,80,.7);">Will this actually<br>get customers?</h2></div>
+      <div data-q="3" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8vw;opacity:0;pointer-events:none;"><h2 style="margin:0;font-family:'Chewy',cursive;font-weight:400;font-size:clamp(40px,7.5vw,108px);line-height:1;color:#fff;text-shadow:0 4px 60px rgba(0,40,80,.7);">How much should<br>this cost?</h2></div>
+      <div data-q="4" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8vw;opacity:0;pointer-events:none;"><h2 style="margin:0;font-family:'Chewy',cursive;font-weight:400;font-size:clamp(42px,8vw,120px);line-height:1;color:#fff;text-shadow:0 4px 70px rgba(0,40,80,.8);">Do I even need<br>a website?</h2></div>
+    </div>
+
+    <!-- ============ WORLD 2 — CLARITY ============ -->
+    <div data-world="2" style="position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;background:linear-gradient(180deg,#020c18 0%,#04243a 44%,#063048 72%,#01080f 100%);">
+      <div style="position:absolute;top:-12%;left:50%;transform:translateX(-50%);width:120%;height:60%;background:radial-gradient(60% 100% at 50% 0%, rgba(90,200,215,.20), rgba(30,90,120,.06) 55%, transparent 75%);"></div>
+      <div data-depth="1.4" style="position:absolute;top:-30%;left:30%;width:14%;height:150%;background:linear-gradient(180deg,rgba(150,235,245,.22),transparent);filter:blur(18px);transform:skewX(8deg);animation:infaRay 11s ease-in-out infinite;"></div>
+      <div data-depth="2.0" style="position:absolute;top:-30%;left:52%;width:10%;height:150%;background:linear-gradient(180deg,rgba(150,235,245,.18),transparent);filter:blur(20px);transform:skewX(8deg);animation:infaRay 14s ease-in-out infinite;animation-delay:-5s;"></div>
+      <div data-depth="1.2" style="position:absolute;top:-30%;left:68%;width:8%;height:150%;background:linear-gradient(180deg,rgba(120,225,235,.16),transparent);filter:blur(16px);transform:skewX(8deg);animation:infaRay 9s ease-in-out infinite;animation-delay:-3s;"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(100% 80% at 50% 110%, rgba(0,40,55,.6), transparent 60%);"></div>
+      <div style="position:absolute;inset:-10%;background:radial-gradient(40% 30% at 30% 35%, rgba(120,230,240,.08), transparent 60%);animation:infaCaustic 18s ease-in-out infinite;"></div>
+
+      <div data-layer="claritybody" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;gap:clamp(20px,5vw,80px);padding:11vh clamp(30px,6.5vw,96px) 9vh;opacity:0;">
+
+        <!-- LEFT — contact messaging, separate from the board -->
+        <div class="c-left" style="flex:1 1 0;max-width:42%;min-width:280px;text-align:left;">
+          <div data-depth="0.6" style="font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.46em;text-transform:uppercase;color:rgba(150,235,245,.72);margin-bottom:22px;">Contact</div>
+          <h2 style="margin:0;max-width:13ch;font-family:'Chewy',cursive;font-weight:400;font-size:clamp(34px,4.6vw,72px);line-height:1.06;color:#eafcff;text-shadow:0 4px 50px rgba(0,50,70,.6);text-wrap:balance;">Building a website shouldn&rsquo;t be overwhelming.</h2>
+          <p style="margin:16px 0 0;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:clamp(20px,2.6vw,34px);color:#7fe9ff;text-shadow:0 2px 30px rgba(0,80,100,.5);">We make it simple.</p>
+          <p style="margin:22px 0 0;max-width:36ch;font-family:'Baloo 2',sans-serif;font-weight:500;font-size:clamp(14px,1.3vw,17px);line-height:1.6;color:rgba(206,232,242,.66);"><span style="color:rgba(232,246,250,.92);font-weight:600;">Let&rsquo;s build something great.</span> Share a few details about your business and we&rsquo;ll get back to you with the next steps.</p>
+        </div>
+
+        <!-- RIGHT — chained pirate wooden board -->
+        <div ref="{{ boardRigRef }}" class="c-board" style="position:relative;flex:0 0 auto;align-self:stretch;width:clamp(360px,40vw,520px);display:flex;align-items:center;justify-content:center;opacity:0;will-change:transform,opacity;">
+          <div ref="{{ boardSwingRef }}" style="position:relative;transform-origin:50% -150px;will-change:transform;filter:drop-shadow(0 26px 34px rgba(0,0,0,.5));">
+
+            <!-- chains rising to the ceiling -->
+            <div class="c-chain" style="position:absolute;left:58px;bottom:100%;width:15px;height:150px;background-image:radial-gradient(ellipse 6.5px 9px at 50% 5px, transparent 38%, #b6bcc6 42%, #5a606b 62%, transparent 67%);background-size:15px 19px;background-repeat:repeat-y;filter:drop-shadow(0 1px 1px rgba(0,0,0,.55));"></div>
+            <div class="c-chain" style="position:absolute;right:58px;bottom:100%;width:15px;height:150px;background-image:radial-gradient(ellipse 6.5px 9px at 50% 5px, transparent 38%, #b6bcc6 42%, #5a606b 62%, transparent 67%);background-size:15px 19px;background-repeat:repeat-y;filter:drop-shadow(0 1px 1px rgba(0,0,0,.55));"></div>
+            <!-- ceiling mounts -->
+            <div class="c-chain" style="position:absolute;left:53px;bottom:calc(100% + 144px);width:25px;height:12px;border-radius:0 0 6px 6px;background:linear-gradient(180deg,#33363c,#1a1c20);box-shadow:0 2px 4px rgba(0,0,0,.5);"></div>
+            <div class="c-chain" style="position:absolute;right:53px;bottom:calc(100% + 144px);width:25px;height:12px;border-radius:0 0 6px 6px;background:linear-gradient(180deg,#33363c,#1a1c20);box-shadow:0 2px 4px rgba(0,0,0,.5);"></div>
+            <!-- iron rings where chain meets board -->
+            <div class="c-chain" style="position:absolute;left:55px;bottom:calc(100% - 8px);width:21px;height:21px;border-radius:50%;border:4px solid #3a3d44;background:transparent;box-shadow:0 1px 2px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset;"></div>
+            <div class="c-chain" style="position:absolute;right:55px;bottom:calc(100% - 8px);width:21px;height:21px;border-radius:50%;border:4px solid #3a3d44;background:transparent;box-shadow:0 1px 2px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset;"></div>
+
+            <!-- the rugged cartoon plank board -->
+            <div class="c-plank" style="position:relative;width:clamp(340px,38vw,500px);padding:40px 38px 42px;transform:rotate(-1.1deg);clip-path:polygon(1% 2%,9% 0.5%,20% 1.5%,34% 0%,47% 2%,58% 0.5%,72% 1.5%,86% 0%,95% 2%,100% 4%,98.5% 12%,100% 22%,96.5% 34%,100% 47%,98% 60%,100% 73%,97% 85%,99% 95%,99% 100%,88% 99%,74% 100%,60% 98.5%,45% 100%,31% 99%,18% 100%,6% 99%,1% 100%,2.5% 88%,0% 76%,2.5% 63%,0% 50%,3% 37%,0.5% 25%,1.5% 13%);background:url('assets/board-wood.png') center/cover;box-shadow:inset 0 0 0 4px #34200d, inset 0 0 0 7px rgba(120,74,34,.5), inset 0 -34px 56px rgba(0,0,0,.42), inset 0 4px 0 rgba(255,220,160,.06);">
+
+              <!-- iron nail heads (asymmetric) -->
+              <span style="position:absolute;top:15px;left:17px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 36% 32%, #8b9098 0 2px, #3a3d44 3px 5.5px, #15161a 6.5px);box-shadow:0 1px 2px rgba(0,0,0,.6);"></span>
+              <span style="position:absolute;top:21px;right:26px;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 38% 34%, #8b9098 0 1.6px, #3a3d44 2.6px 4.5px, #15161a 5.5px);box-shadow:0 1px 2px rgba(0,0,0,.6);"></span>
+              <span style="position:absolute;bottom:16px;left:27px;width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 40% 30%, #8b9098 0 2px, #3a3d44 3px 5px, #15161a 6px);box-shadow:0 1px 2px rgba(0,0,0,.6);"></span>
+              <span style="position:absolute;bottom:22px;right:18px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 34% 36%, #8b9098 0 2px, #3a3d44 3px 5.5px, #15161a 6.5px);box-shadow:0 1px 2px rgba(0,0,0,.6);"></span>
+              <span style="position:absolute;top:48%;left:13px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 38% 34%, #82878f 0 1.5px, #34373d 2.5px 4px, #141519 5px);box-shadow:0 1px 2px rgba(0,0,0,.55);"></span>
+
+              <div style="position:relative;z-index:2;">
+                <div style="font-family:'Chewy',cursive;font-size:clamp(26px,2.7vw,36px);color:#f1d391;letter-spacing:.01em;text-shadow:0 2px 0 rgba(0,0,0,.45), 0 0 20px rgba(255,200,90,.28);">Start Your Project</div>
+                <div style="font-family:'Baloo 2',sans-serif;font-weight:600;font-size:13px;color:rgba(255,242,218,.62);margin-top:3px;margin-bottom:24px;">Tell us about your project using the form below, or reach out directly at <a href="mailto:contact@infawebdesign.com" style="color:#f1d391;text-decoration:underline;text-underline-offset:2px;">contact@infawebdesign.com</a></div>
+
+                <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
+                  <form onSubmit="{{ onSubmit }}" style="display:flex;flex-direction:column;gap:18px;text-align:left;">
+                    <div>
+                      <label style="display:block;font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#e7c887;margin-bottom:7px;">Name</label>
+                      <input ref="{{ nameRef }}" onInput="{{ onNameInput }}" class="brd" type="text" placeholder="Your name" style="width:100%;height:42px;padding:0 2px;border:none;border-bottom:1.5px solid rgba(231,200,135,.45);background:transparent;color:#fff8ee;font-family:'Baloo 2',sans-serif;font-weight:500;font-size:17px;outline:none;">
+                      <sc-if value="{{ errName }}" hint-placeholder-val="{{ false }}"><div style="margin-top:6px;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.03em;color:#ff9d7c;">Please enter your name.</div></sc-if>
+                    </div>
+                    <div>
+                      <label style="display:block;font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#e7c887;margin-bottom:7px;">Email</label>
+                      <input ref="{{ emailRef }}" onInput="{{ onEmailInput }}" class="brd" type="email" placeholder="you@email.com" style="width:100%;height:42px;padding:0 2px;border:none;border-bottom:1.5px solid rgba(231,200,135,.45);background:transparent;color:#fff8ee;font-family:'Baloo 2',sans-serif;font-weight:500;font-size:17px;outline:none;">
+                      <sc-if value="{{ errEmail }}" hint-placeholder-val="{{ false }}"><div style="margin-top:6px;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.03em;color:#ff9d7c;">{{ emailMsg }}</div></sc-if>
+                    </div>
+                    <div>
+                      <label style="display:block;font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#e7c887;margin-bottom:7px;">Website URL <span style="opacity:.6;">(optional)</span></label>
+                      <input ref="{{ urlRef }}" class="brd" type="text" inputmode="url" placeholder="https://your-site.com" style="width:100%;height:42px;padding:0 2px;border:none;border-bottom:1.5px solid rgba(231,200,135,.45);background:transparent;color:#fff8ee;font-family:'Baloo 2',sans-serif;font-weight:500;font-size:17px;outline:none;">
+                    </div>
+                    <button ref="{{ ctaRef }}" type="submit" style="position:relative;margin-top:18px;align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-width:215px;height:62px;padding:0 42px;border:none;background:url('assets/btn-wood.png') center/100% 100% no-repeat;cursor:pointer;font-family:'Chewy',cursive;font-size:21px;letter-spacing:.03em;color:#f7dca0;text-shadow:0 1px 0 rgba(0,0,0,.55),0 2px 3px rgba(0,0,0,.5),0 0 12px rgba(255,200,90,.18);filter:drop-shadow(0 5px 4px rgba(0,0,0,.45)) drop-shadow(0 2px 0 rgba(34,18,7,.95));transition:filter .15s,color .2s,transform .18s;will-change:transform;" style-hover="color:#ffe9b3;filter:drop-shadow(0 8px 7px rgba(0,0,0,.5)) drop-shadow(0 2px 0 rgba(34,18,7,.95)) brightness(1.06);transform:scale(1.05);" style-active="filter:drop-shadow(0 2px 2px rgba(0,0,0,.45)) drop-shadow(0 1px 0 rgba(34,18,7,.95)) brightness(.97);transform:scale(0.97);"><span aria-hidden="true" style="position:absolute;top:7px;left:10px;width:13px;height:12px;border-radius:54% 46% 50% 50%;transform:rotate(-24deg);background:radial-gradient(circle at 35% 30%,#c6cad0 0 2px,#777b82 2.6px 4.5px,#232529 6px);box-shadow:1px 2px 2px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 1px rgba(0,0,0,.4);" style-after="content:'';position:absolute;left:0px;top:8px;width:2.5px;height:8px;background:linear-gradient(#454850,#15171b);border-radius:0 0 1px 2px;transform:rotate(48deg);box-shadow:0 1px 1px rgba(0,0,0,.5);"></span><span aria-hidden="true" style="position:absolute;top:6px;right:12px;width:12px;height:13px;border-radius:48% 52% 52% 48%;transform:rotate(19deg);background:radial-gradient(circle at 38% 30%,#c6cad0 0 2px,#777b82 2.6px 4.5px,#232529 6px);box-shadow:1px 2px 2px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 1px rgba(0,0,0,.4);" style-after="content:'';position:absolute;right:0px;top:9px;width:2.5px;height:7px;background:linear-gradient(#454850,#15171b);border-radius:0 0 2px 1px;transform:rotate(-42deg);box-shadow:0 1px 1px rgba(0,0,0,.5);"></span><span aria-hidden="true" style="position:absolute;bottom:8px;left:14px;width:12px;height:12px;border-radius:50% 50% 46% 54%;transform:rotate(34deg);background:radial-gradient(circle at 34% 32%,#c6cad0 0 2px,#777b82 2.6px 4.5px,#232529 6px);box-shadow:1px 2px 2px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 1px rgba(0,0,0,.4);" style-after="content:'';position:absolute;left:1px;bottom:7px;width:2.5px;height:8px;background:linear-gradient(#454850,#15171b);border-radius:1px 2px 0 0;transform:rotate(-34deg);box-shadow:0 1px 1px rgba(0,0,0,.5);"></span><span aria-hidden="true" style="position:absolute;bottom:9px;right:11px;width:13px;height:12px;border-radius:52% 48% 50% 50%;transform:rotate(-15deg);background:radial-gradient(circle at 36% 30%,#c6cad0 0 2px,#777b82 2.6px 4.5px,#232529 6px);box-shadow:1px 2px 2px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 1px rgba(0,0,0,.4);" style-after="content:'';position:absolute;right:0px;bottom:8px;width:2.5px;height:8px;background:linear-gradient(#454850,#15171b);border-radius:2px 1px 0 0;transform:rotate(40deg);box-shadow:0 1px 1px rgba(0,0,0,.5);"></span>Get a Free Quote</button>
+                    <sc-if value="{{ sending }}" hint-placeholder-val="{{ false }}"><div style="margin-top:8px;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.05em;color:rgba(231,200,135,.85);">Sending your message&hellip;</div></sc-if>
+                    <sc-if value="{{ sendErr }}" hint-placeholder-val="{{ false }}"><div style="margin-top:8px;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.02em;color:#ff9d7c;">Couldn&rsquo;t send right now &mdash; please email us directly at contact@infawebdesign.com.</div></sc-if>
+                  </form>
+                </sc-if>
+                <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:6px 0 10px;">
+                    <div style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%, rgba(245,217,143,.3), rgba(60,36,8,.2));border:1.5px solid #e7c887;box-shadow:0 0 30px rgba(231,200,135,.35);font-size:26px;color:#f3d99a;">&#10003;</div>
+                    <div style="font-family:'Chewy',cursive;font-size:26px;color:#f1d391;text-shadow:0 2px 0 rgba(0,0,0,.4);">Aye &mdash; we&rsquo;re on it.</div>
+                    <div style="font-family:'Baloo 2',sans-serif;font-weight:500;font-size:14px;color:rgba(255,245,225,.75);">Your bespoke rebuild is charted. We&rsquo;ll be in touch.</div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ GLOBAL FX (bubbles / surge / pops) ============ -->
+    <canvas ref="{{ fxRef }}" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;"></canvas>
+
+    <!-- ============ NAV ============ -->
+    <nav style="position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,4vw,52px);">
+      <div onClick="{{ goHome }}" style="display:flex;align-items:center;cursor:pointer;">
+        <span style="font-family:'Chewy',cursive;font-size:34px;letter-spacing:.01em;color:#eef7ff;text-shadow:0 2px 18px rgba(0,40,80,.5);transform:skewX(-7deg);">InfaWeb</span>
+      </div>
+      <div class="nav-links" style="display:flex;align-items:center;gap:clamp(22px,3.2vw,48px);">
+        <a href="about.html" data-nav data-xnav style="font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:rgba(214,234,255,.85);text-decoration:none;transition:color .2s;" style-hover="color:#7fe9ff;">About Us</a>
+        <a href="#" data-nav onClick="{{ goContact }}" style="position:relative;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:rgba(214,234,255,.85);text-decoration:none;transition:color .2s;" style-hover="color:#7fe9ff;">Contact<span aria-hidden="true" data-underline="contact" style="position:absolute;left:0;right:0;bottom:-9px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#7fe9ff 18%,#7fe9ff 82%,transparent);box-shadow:0 0 10px rgba(127,233,255,.95),0 0 4px rgba(127,233,255,.9);opacity:0;transition:opacity .35s;"></span></a>
+      </div>
+      <button class="nav-burger" onClick="{{ toggleNav }}" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:0;left:0;right:0;z-index:40;padding:72px 22px 24px;display:flex;flex-direction:column;gap:4px;background:rgba(4,16,28,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(127,233,255,.2);box-shadow:0 22px 54px rgba(0,0,0,.55);">
+        <a href="about.html" data-xnav onClick="{{ closeNav }}" style="padding:16px 8px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:#bff4ff;text-decoration:none;border-bottom:1px solid rgba(127,233,255,.12);">About Us</a>
+        <a href="#" onClick="{{ navContact }}" style="padding:16px 8px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:rgba(214,234,255,.9);text-decoration:none;">Contact</a>
+      </div>
+    </sc-if>
+
+    <!-- world progress dots -->
+    <div class="nav-dots" style="position:absolute;right:26px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:12px;">
+      <div ref="{{ dot0Ref }}" style="width:8px;height:8px;border-radius:50%;background:rgba(190,235,255,.9);transition:all .4s;"></div>
+      <div ref="{{ dot1Ref }}" style="width:8px;height:8px;border-radius:50%;background:rgba(190,235,255,.25);transition:all .4s;"></div>
+      <div ref="{{ dot2Ref }}" style="width:8px;height:8px;border-radius:50%;background:rgba(190,235,255,.25);transition:all .4s;"></div>
+    </div>
+
+    <!-- scroll hint -->
+    <div ref="{{ hintRef }}" style="position:absolute;left:50%;bottom:30px;transform:translateX(-50%);z-index:20;display:flex;flex-direction:column;align-items:center;gap:10px;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:rgba(200,230,255,.7);animation:infaHintText 2.4s ease-in-out infinite;">Scroll to enter</div>
+      <div style="position:relative;width:22px;height:34px;border-radius:12px;border:1px solid rgba(170,215,255,.4);">
+        <div style="position:absolute;left:50%;top:7px;width:3px;height:6px;border-radius:2px;margin-left:-1.5px;background:#bff6ff;box-shadow:0 0 8px rgba(0,229,255,.9);animation:infaHintDot 1.8s ease-in-out infinite;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;liquidMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ripple&quot;,&quot;flow&quot;,&quot;melt&quot;],&quot;default&quot;:&quot;flow&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero liquid&quot;},&quot;liquidStrength&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:1,&quot;min&quot;:0.4,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Hero liquid&quot;},&quot;bubbleIntensity&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:1,&quot;min&quot;:0.3,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Bubbles&quot;}}">
+/* INFAWEB — three-world immersive experience.
+   Virtual-scroll state machine (native scroll locked). WORLD 0 reuses the WebGL
+   liquid-video hero; bubble-surge transitions carry the user between worlds. One
+   global 2D canvas runs ambient bubbles (3 depth layers), the cursor trail, the
+   surge, and clickable pops with a synthesized WebAudio pop. */
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.rootRef=React.createRef(); this.stageRef=React.createRef();
+    this.glRef=React.createRef(); this.fxRef=React.createRef(); this.vidRef=React.createRef();
+    this.urlRef=React.createRef(); this.emailRef=React.createRef(); this.nameRef=React.createRef(); this.ctaRef=React.createRef(); this.panelRef=React.createRef();
+    this.boardRigRef=React.createRef(); this.boardSwingRef=React.createRef();
+    this.hintRef=React.createRef(); this.dot0Ref=React.createRef(); this.dot1Ref=React.createRef(); this.dot2Ref=React.createRef();
+    this.state={ submitted:false, errName:false, errEmail:false, sending:false, sendErr:false, emailMsg:'Enter a valid email address.', navOpen:false, liquidMode: props.liquidMode||'flow' }; this.world=0;
+    this.mouse={x:0.5,y:0.5}; this.mpx={x:0,y:0}; this.stir=0; this.t=0; this.frame=0;
+    this.prog=0; this.targetProg=0;
+    this.transition={active:false,dir:1,t0:0}; this.fromWorld=0; this.toWorld=0; this.swapped=false;
+    this.bubbles=[]; this.cursors=[]; this.pops=[]; this.lastCursorSpawn=0; this.formBurst=-99;
+    // WORLD 0 liquid timeline (prog 0..1)
+    this.TL={ liquid:[[0,0],[0.5,0.14],[0.82,0.5],[1,0.82]], reform:[[0,1],[0.55,0.92],[0.88,0.22],[1,0]], dim:[[0,0.98],[1,0.7]] };
+  }
+  clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+  ss(a,b,x){ if(a===b) return x<a?0:1; let t=this.clamp((x-a)/(b-a),0,1); return t*t*(3-2*t); }
+  gauss(x,c,w){ const d=(x-c)/w; return Math.exp(-d*d); }
+  kf(p,keys){ for(let i=0;i<keys.length-1;i++){ const a=keys[i],b=keys[i+1]; if(p<=b[0]){ const t=(p-a[0])/((b[0]-a[0])||1); return a[1]+(b[1]-a[1])*this.clamp(t,0,1); } } return keys[keys.length-1][1]; }
+
+  componentDidMount(){
+    const ready=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
+    ready.then(()=>setTimeout(()=>this.init(),60));
+    if(location.hash==='#contact'){ this.world=2; this.prog=1; this.targetProg=1; }
+    this._onResize=()=>this.resize(); window.addEventListener('resize',this._onResize);
+    this._onMove=(e)=>this.onMove(e); window.addEventListener('pointermove',this._onMove,{passive:true});
+    this._onWheel=(e)=>{ e.preventDefault(); this.handleDelta(e.deltaY); }; window.addEventListener('wheel',this._onWheel,{passive:false});
+    this._onKey=(e)=>{ const k=e.key; if(k==='ArrowDown'||k==='PageDown'||k===' '){ e.preventDefault(); this.handleDelta(150);} else if(k==='ArrowUp'||k==='PageUp'){ e.preventDefault(); this.handleDelta(-150);} };
+    window.addEventListener('keydown',this._onKey);
+    this._onTS=(e)=>{ this.touchY=e.touches[0].clientY; }; window.addEventListener('touchstart',this._onTS,{passive:true});
+    this._onTM=(e)=>{ if(this.touchY==null) return; const y=e.touches[0].clientY; const dy=this.touchY-y; this.touchY=y; this.handleDelta(dy*1.7); if(e.cancelable) e.preventDefault(); };
+    window.addEventListener('touchmove',this._onTM,{passive:false});
+    this._onDown=(e)=>this.onDown(e); window.addEventListener('pointerdown',this._onDown,{passive:true});
+  }
+  componentWillUnmount(){
+    cancelAnimationFrame(this._raf);
+    ['resize','keydown'].forEach(()=>{});
+    window.removeEventListener('resize',this._onResize); window.removeEventListener('pointermove',this._onMove);
+    window.removeEventListener('wheel',this._onWheel); window.removeEventListener('keydown',this._onKey);
+    window.removeEventListener('touchstart',this._onTS); window.removeEventListener('touchmove',this._onTM);
+    window.removeEventListener('pointerdown',this._onDown);
+    if(this.gl){ const e=this.gl.getExtension('WEBGL_lose_context'); if(e) e.loseContext(); }
+  }
+  componentDidUpdate(prev){ if(prev.liquidMode!==this.props.liquidMode && this.props.liquidMode) this.setState({liquidMode:this.props.liquidMode}); }
+
+  onMove(e){
+    const st=this.stageRef.current; if(!st) return;
+    const r=st.getBoundingClientRect();
+    this.mouse.x=(e.clientX-r.left)/r.width; this.mouse.y=(e.clientY-r.top)/r.height;
+    this.mpx.x=e.clientX-r.left; this.mpx.y=e.clientY-r.top;
+    const v=Math.hypot(e.movementX||0,e.movementY||0);
+    // cursor bubble trail — rate scales with speed
+    const now=this.t, rate=0.02+Math.min(0.045,v*0.0015);
+    if(now-this.lastCursorSpawn>rate && !this.transition.active){ this.spawnCursor(this.mpx.x,this.mpx.y,v); this.lastCursorSpawn=now; }
+  }
+
+  handleDelta(dy){
+    if(this.transition.active) return;
+    this.ensureAudio();
+    this.targetProg += dy*0.00115;
+    if(this.targetProg>=1){ this.targetProg=1; if(this.world<2) this.triggerTransition(1); }
+    else if(this.targetProg<=0){ this.targetProg=0; if(this.world>0) this.triggerTransition(-1); }
+  }
+  goContact=(e)=>{ if(e&&e.preventDefault)e.preventDefault(); if(this.world!==2){ this.world=2; this.prog=1; this.targetProg=1; } }
+
+  triggerTransition(dir){
+    if(this.transition.active) return;
+    if(dir>0 && this.world>=2) return; if(dir<0 && this.world<=0) return;
+    this.transition={active:true,dir,t0:this.t}; this.fromWorld=this.world; this.toWorld=this.world+dir; this.swapped=false;
+    this.ensureAudio();
+  }
+  updateTransition(){
+    if(!this.transition.active) return;
+    const u=(this.t-this.transition.t0)/1.9;
+    if(!this.swapped && u>=0.46){ this.swapped=true; this.world=this.toWorld; this.prog=this.transition.dir>0?0:1; this.targetProg=this.prog; }
+    if(u>=1) this.transition.active=false;
+  }
+
+  // ---------------- GL liquid hero ----------------
+  init(){
+    this.vid=this.vidRef.current;
+    this.fx=this.fxRef.current; this.fxc=this.fx.getContext('2d');
+    try{ this.initGL(); }catch(err){ console.warn('WebGL off, 2D fallback',err); this.gl=null; }
+    if(!this.gl) this.initFallback();
+    this.resize(); this.loop();
+  }
+  compile(type,src){ const gl=this.gl,s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw new Error('shader: '+gl.getShaderInfoLog(s)); return s; }
+  initGL(){
+    const cv=this.glRef.current, opts={alpha:false,antialias:false,premultipliedAlpha:false,preserveDrawingBuffer:false};
+    const gl=cv.getContext('webgl',opts)||cv.getContext('experimental-webgl',opts); if(!gl) throw new Error('no webgl'); this.gl=gl;
+    const VERT='attribute vec2 aPos; varying vec2 vUv; void main(){ vUv=aPos*0.5+0.5; gl_Position=vec4(aPos,0.0,1.0); }';
+    const FRAG=`precision highp float; varying vec2 vUv;
+      uniform sampler2D uVideo, uText; uniform vec2 uRes, uVideoRes, uMouse; uniform float uTime, uLiquid, uReform, uDim, uStir;
+      float hash(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
+      float vnoise(vec2 p){ vec2 i=floor(p),f=fract(p); float a=hash(i),b=hash(i+vec2(1.,0.)),c=hash(i+vec2(0.,1.)),d=hash(i+vec2(1.,1.)); vec2 u=f*f*(3.-2.*f); return mix(a,b,u.x)+(c-a)*u.y*(1.-u.x)+(d-b)*u.x*u.y; }
+      float fbm(vec2 p){ float v=0.,a=0.5; for(int i=0;i<5;i++){ v+=a*vnoise(p); p=p*2.02+vec2(7.1,3.3); a*=0.5; } return v; }
+      vec2 coverUv(vec2 uv){ float sa=uRes.x/uRes.y, va=uVideoRes.x/uVideoRes.y; if(sa>va){ uv.x=(uv.x-0.5)*(sa/va)+0.5; } else { uv.y=(uv.y-0.5)*(va/sa)+0.5; } return uv; }
+      void main(){ vec2 uv=vUv; float tm=uTime*0.06;
+        vec2 q=vec2(fbm(uv*2.6+vec2(tm,0.0)), fbm(uv*2.6+vec2(5.2,-tm)));
+        vec2 flow=vec2(fbm(uv*2.6+q*1.8+vec2(1.7,9.2)), fbm(uv*2.6+q*1.8+vec2(8.3,2.8)))-0.5;
+        vec2 md=uMouse-uv; float mr=exp(-dot(md,md)*7.0); flow+=normalize(md+1e-4)*mr*uStir*0.9;
+        float disp=uLiquid; vec2 vUvw=coverUv(uv+flow*disp); vec3 vid=texture2D(uVideo, vUvw).rgb*uDim;
+        float ca=disp*0.5+uStir*0.15; vec2 dir=flow*ca*0.04;
+        vec3 vidC=vec3(texture2D(uVideo, coverUv(uv+flow*disp+dir)).r, vid.g/max(uDim,0.001), texture2D(uVideo, coverUv(uv+flow*disp-dir)).b)*uDim;
+        vid=mix(vid,vidC, clamp(ca*3.0,0.0,1.0));
+        vec2 tUv=uv+flow*disp*(1.0-uReform); float m=texture2D(uText, tUv).a;
+        float lum=dot(vid, vec3(0.299,0.587,0.114));
+        vec3 neon=mix(vec3(0.0,0.9,1.0), vec3(0.55,0.36,1.0), 0.5+0.5*sin(uTime*0.35+uv.x*3.5+uv.y*2.0));
+        vec3 glow=neon*(0.45+lum*1.4); vec3 col=vid+glow*m*uReform;
+        col+=(hash(uv*uRes+uTime)-0.5)*0.015; gl_FragColor=vec4(col,1.0); }`;
+    const prog=gl.createProgram(); gl.attachShader(prog,this.compile(gl.VERTEX_SHADER,VERT)); gl.attachShader(prog,this.compile(gl.FRAGMENT_SHADER,FRAG)); gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS)) throw new Error('link: '+gl.getProgramInfoLog(prog));
+    gl.useProgram(prog); this.glProgram=prog;
+    const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    const loc=gl.getAttribLocation(prog,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    this.u={}; ['uVideo','uText','uRes','uVideoRes','uMouse','uTime','uLiquid','uReform','uDim','uStir'].forEach(n=>this.u[n]=gl.getUniformLocation(prog,n));
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true); this.texVideo=this.makeTex(); this.texText=this.makeTex();
+    gl.uniform1i(this.u.uVideo,0); gl.uniform1i(this.u.uText,1); this.videoReady=false; this.buildText();
+  }
+  makeTex(){ const gl=this.gl,t=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([0,0,0,0])); return t; }
+  buildText(){
+    const W=this.W||1280,H=this.H||720; const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+    x.clearRect(0,0,W,H); x.fillStyle='#fff'; x.textAlign='center'; x.textBaseline='middle';
+    let fs=Math.round(W*0.17); x.font=`400 ${fs}px Chewy, cursive`;
+    while(x.measureText('INFAWEB').width>W*0.82 && fs>20){ fs-=2; x.font=`400 ${fs}px Chewy, cursive`; }
+    x.fillText('INFAWEB', W/2, H*0.46);
+    const gl=this.gl; gl.bindTexture(gl.TEXTURE_2D,this.texText); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  }
+  initFallback(){ const v=this.vidRef.current; if(v){ v.style.opacity='1'; v.style.filter='saturate(.95) brightness(.7) contrast(1.05)'; } if(this.glRef.current) this.glRef.current.style.display='none'; }
+
+  resize(){
+    const st=this.stageRef.current; if(!st) return;
+    const w=st.clientWidth,h=st.clientHeight,dpr=Math.min(window.devicePixelRatio||1,2); this.W=w; this.H=h; this.dpr=dpr;
+    this.fx.width=w*dpr; this.fx.height=h*dpr; this.fxc.setTransform(dpr,0,0,dpr,0,0);
+    if(this.gl){ const cv=this.glRef.current; cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); this.gl.viewport(0,0,cv.width,cv.height); if(this.u) this.gl.uniform2f(this.u.uRes,cv.width,cv.height); this.buildText(); }
+  }
+
+  loop(){
+    this._raf=requestAnimationFrame(()=>this.loop());
+    this.t+=0.016; this.frame++; this.stir*=0.94;
+    this.prog += (this.targetProg-this.prog)*0.1; if(this.targetProg===0 && this.prog<0.004) this.prog=0;
+    this.updateTransition();
+    const world0=(this.world===0)||(this.transition.active&&(this.fromWorld===0||this.toWorld===0));
+    if(this.gl){
+      if(world0){
+        // clean static hero until scroll; GL melt cross-fades in smoothly (no hard pop)
+        let glA=this.clamp(this.ss(0.025,0.16,this.prog),0,1);
+        if(this.transition.active&&this.fromWorld===0) glA=1;
+        const cv=this.glRef.current; cv.style.display='block'; cv.style.opacity=glA.toFixed(3);
+        if(this.vid) this.vid.style.opacity='1';
+        this.renderGL();
+      } else {
+        this.glRef.current.style.display='none';
+        if(this.vid) this.vid.style.opacity='0';
+      }
+    }
+    this.drawScene(); this.drawFx();
+  }
+
+  renderGL(){
+    const gl=this.gl,v=this.vid,p=this.prog;
+    if(v&&v.complete&&v.naturalWidth&&!this.videoReady){ gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,this.texVideo); try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,v); gl.uniform2f(this.u.uVideoRes,v.naturalWidth,v.naturalHeight); this.videoReady=true; }catch(e){} }
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D,this.texText);
+    const mode={ripple:0.55,flow:1.0,melt:1.7}[this.state.liquidMode]||1.0;
+    const strength=(this.props.liquidStrength!=null?this.props.liquidStrength:1);
+    // transition activation: when leaving world 0, ramp instability
+    let act=0; if(this.transition.active&&this.fromWorld===0&&this.transition.dir>0){ const u=(this.t-this.transition.t0)/1.9; act=this.ss(0,0.4,u)*0.7; }
+    let liquid=this.kf(p,this.TL.liquid)*mode*strength + this.stir*0.18 + act;
+    const reform=0; // hero INFAWEB text overlay removed — video shows exactly, no extra text
+    const dim=this.kf(p,this.TL.dim);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,this.texVideo);
+    gl.uniform1f(this.u.uTime,this.t); gl.uniform1f(this.u.uLiquid,liquid); gl.uniform1f(this.u.uReform,reform); gl.uniform1f(this.u.uDim,dim); gl.uniform1f(this.u.uStir,this.stir);
+    gl.uniform2f(this.u.uMouse,this.mouse.x,1.0-this.mouse.y); gl.drawArrays(gl.TRIANGLES,0,3);
+  }
+
+  drawScene(){
+    const st=this.stageRef.current; if(!st) return; const w=this.world, p=this.prog;
+    // world layer visibility
+    ['0','1','2'].forEach(id=>{ const el=st.querySelector(`[data-world="${id}"]`); if(!el) return; const on=(+id===w); el.style.opacity=on?1:0; el.style.visibility=on?'visible':'hidden'; el.style.pointerEvents=on?'auto':'none'; });
+    const _cu=st.querySelector('[data-underline="contact"]'); if(_cu) _cu.style.opacity=(w===2?'1':'0');
+    // active-tab glow: tint the Contact link light blue while on the contact world (guarded to world-change so it doesn't fight :hover)
+    if(this._navW!==w){ this._navW=w; const _cl=_cu&&_cu.closest('a'); if(_cl){ _cl.style.color=(w===2?'#9fe9ff':'rgba(214,234,255,.85)'); _cl.style.textShadow=(w===2?'0 0 16px rgba(127,233,255,.55)':'none'); } }
+    // parallax for active world depth layers
+    const mx=(this.mouse.x-0.5), my=(this.mouse.y-0.5);
+    const active=st.querySelector(`[data-world="${w}"]`);
+    if(active){ active.querySelectorAll('[data-depth]').forEach(el=>{ const d=parseFloat(el.getAttribute('data-depth'))||1; const base=el.getAttribute('data-basetf')||''; el.style.transform=`translate(${-mx*d*14}px,${-my*d*10}px)`; }); }
+    // WORLD 0 reveals
+    const g3=st.querySelector('[data-layer="grade3"]'); if(g3) g3.style.opacity=this.ss(0.55,0.85,p);
+    const sub=st.querySelector('[data-layer="w0sub"]'); if(sub){ sub.style.opacity=(w===0?(1-this.ss(0.06,0.26,p)):0); }
+    // WORLD 1 panels density + typography
+    if(w===1){
+      active.querySelectorAll('[data-panel]').forEach((el,i)=>{ const appear=this.ss(0.02+i*0.015,0.2+i*0.02,p); el.style.opacity=(0.4+0.6*appear)*(0.7+0.3*this.ss(0,0.6,p)); el.style.filter=`saturate(${0.8+p*0.5})`; });
+      const qs=active.querySelectorAll('[data-q]'); const centers=[0.1,0.3,0.5,0.7,0.9];
+      qs.forEach((el,i)=>{ const o=this.gauss(p,centers[i],0.075); el.style.opacity=this.clamp(o,0,1); const s=0.92+0.08*this.clamp(o,0,1); el.firstElementChild.style.transform=`scale(${s})`; });
+    }
+    // WORLD 2 reveal + chained board slide-in / swing
+    if(w===2){
+      const body=active.querySelector('[data-layer="claritybody"]'); if(body){ body.style.opacity=this.ss(0.04,0.3,p); }
+      const e=this.ss(0.08,0.52,p);
+      const rig=this.boardRigRef.current, sw=this.boardSwingRef.current;
+      if(rig){ rig.style.opacity=e; rig.style.transform=`translateX(${(1-e)*-160}px)`; }
+      if(sw){ const sway=Math.sin(this.t*0.85)*1.5, entry=(1-e)*-8; sw.style.transform=`rotate(${(sway*(0.25+0.75*e))+entry}deg)`; }
+    }
+    // hint
+    const hint=this.hintRef.current; if(hint){ const showHint=(w<2)?(1-this.ss(0.05,0.2,p)):0; hint.style.opacity=showHint; }
+    // dots
+    [this.dot0Ref,this.dot1Ref,this.dot2Ref].forEach((r,i)=>{ const el=r.current; if(!el) return; const on=(i===w); el.style.background=on?'rgba(190,235,255,.95)':'rgba(190,235,255,.25)'; el.style.transform=on?'scale(1.5)':'scale(1)'; el.style.boxShadow=on?'0 0 12px rgba(0,229,255,.7)':'none'; });
+  }
+
+  // ---------------- FX canvas (bubbles / surge / cursor / pops) ----------------
+  drawFx(){
+    const cx=this.fxc; if(!cx) return; const W=this.W,H=this.H,w=this.world; cx.clearRect(0,0,W,H);
+    const bi=(this.props.bubbleIntensity!=null?this.props.bubbleIntensity:1);
+    // surge intensity from transition
+    let surge=0, coverA=0;
+    if(this.transition.active){ const u=(this.t-this.transition.t0)/1.9; surge=this.clamp(this.ss(0.05,0.42,u)-this.ss(0.55,0.95,u),0,1); coverA=this.clamp(this.ss(0.18,0.42,u)-this.ss(0.5,0.82,u),0,1)*0.97; }
+    if(this.formBurst>this.t-1.4) surge=Math.max(surge,0.45*(1-(this.t-this.formBurst)/1.4));
+    // ambient spawn — 3 depth layers, tuned per world
+    const amb = w===0?1.0 : (w===1?0.55 : 0.8);
+    if(!this.transition.active||surge<0.2){
+      if(Math.random()<0.09*amb*bi) this.spawnAmbient('far',w);
+      if(Math.random()<0.05*amb*bi) this.spawnAmbient('mid',w);
+      if(Math.random()<0.024*amb*bi) this.spawnAmbient('near',w);
+    }
+    // surge spawn
+    let s=surge*surge*22*bi; while(s>0){ if(Math.random()<s) this.spawnSurge(surge); s--; }
+    // draw ambient + surge bubbles (shared array)
+    const tint=this.worldTint(w);
+    const arr=this.bubbles;
+    for(let i=arr.length-1;i>=0;i--){ const b=arr[i];
+      b.y-=b.vy; b.x+=Math.sin(b.y*0.02+b.w)*b.amp*0.1; b.life+=0.016;
+      // cursor repulsion
+      const dx=b.x-this.mpx.x, dy=b.y-this.mpx.y, dd=dx*dx+dy*dy, R=120;
+      if(dd<R*R && dd>1){ const f=(1-Math.sqrt(dd)/R)*2.6; const inv=1/Math.sqrt(dd); b.x+=dx*inv*f; b.y+=dy*inv*f; }
+      const a=b.alpha*this.clamp(b.life*3,0,1)*this.clamp((b.y+b.r)/(H*0.1),0,1);
+      this.paintBubble(cx,b,a,b.surge?[96,150,235]:tint);
+      if(b.y<-b.r-6) arr.splice(i,1);
+    }
+    if(arr.length>360) arr.splice(0,arr.length-360);
+    // cover veil (hides world swap behind surge)
+    if(coverA>0){ const g=cx.createLinearGradient(0,H,0,0); g.addColorStop(0,`rgba(12,34,74,${coverA})`); g.addColorStop(0.55,`rgba(6,20,52,${coverA})`); g.addColorStop(1,`rgba(2,9,26,${coverA})`); cx.fillStyle=g; cx.fillRect(0,0,W,H); }
+    // cursor trail bubbles
+    for(let i=this.cursors.length-1;i>=0;i--){ const b=this.cursors[i]; b.y-=b.vy; b.x+=b.vx; b.vx*=0.97; b.life+=0.016; const a=b.alpha*(1-this.clamp(b.life/b.max,0,1)); if(a<=0.01){ this.cursors.splice(i,1); continue; } this.paintBubble(cx,b,a,[150,210,255]); }
+    // pop particles
+    for(let i=this.pops.length-1;i>=0;i--){ const p=this.pops[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=0.05; p.vx*=0.96; p.life+=0.016; const a=p.alpha*(1-this.clamp(p.life/0.6,0,1)); if(a<=0.01){ this.pops.splice(i,1); continue; } cx.beginPath(); cx.arc(p.x,p.y,p.r,0,6.283); cx.fillStyle=`rgba(190,235,255,${a})`; cx.fill(); }
+  }
+  worldTint(w){ return w===2?[150,225,235] : [80,160,255]; }
+  paintBubble(cx,b,a,rgb){ if(a<=0) return; const r=b.r;
+    cx.beginPath(); cx.arc(b.x,b.y,r,0,6.283); cx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${0.09*a})`; cx.fill();
+    cx.lineWidth=1.1; cx.strokeStyle=`rgba(${Math.min(255,rgb[0]+70)},${Math.min(255,rgb[1]+50)},255,${0.5*a})`; cx.stroke();
+    cx.beginPath(); cx.arc(b.x-r*0.32,b.y-r*0.34,r*0.22,0,6.283); cx.fillStyle=`rgba(230,248,255,${0.55*a})`; cx.fill();
+  }
+  spawnAmbient(layer,w){ const W=this.W,H=this.H;
+    let r,vy,alpha; if(layer==='far'){ r=1.5+Math.random()*3; vy=0.25+Math.random()*0.5; alpha=0.45; }
+    else if(layer==='mid'){ r=5+Math.random()*9; vy=0.5+Math.random()*1.1; alpha=0.6; }
+    else { r=11+Math.random()*20; vy=0.8+Math.random()*1.6; alpha=0.72; }
+    this.bubbles.push({ x:Math.random()*W, y:H+r+Math.random()*30, r, vy, w:Math.random()*6.28, amp:5+Math.random()*18, alpha, life:0, layer, pop:layer!=='far', surge:false });
+  }
+  spawnSurge(surge){ const W=this.W,H=this.H; this.bubbles.push({ x:Math.random()*W, y:H+Math.random()*60+10, r:10+Math.random()*58, vy:7+Math.random()*10+surge*9, w:Math.random()*6.28, amp:6+Math.random()*22, alpha:0.92, life:0, layer:'near', pop:true, surge:true }); }
+  spawnCursor(x,y,v){ if(this.cursors.length>300) return; const n=2+Math.floor(Math.min(5,v*0.07)); for(let i=0;i<n;i++){ this.cursors.push({ x:x+(Math.random()-0.5)*26, y:y+(Math.random()-0.5)*26, r:3+Math.random()*8, vx:(Math.random()-0.5)*0.9, vy:0.4+Math.random()*1.2, alpha:0.62, life:0, max:0.9+Math.random()*0.7, pop:true }); } }
+
+  onDown(e){
+    const tg=e.target; if(tg&&tg.closest&&tg.closest('input,button,a,form,[data-panel]')) { /* still allow pop near, but skip if on control */ if(tg.closest('input,button,a')) return; }
+    const st=this.stageRef.current; if(!st) return; const r=st.getBoundingClientRect(); const x=e.clientX-r.left, y=e.clientY-r.top;
+    // hit-test nearest poppable bubble (ambient/surge then cursor)
+    let hit=null,hd=1e9,arrHit=null,idx=-1;
+    const test=(arr)=>{ for(let i=0;i<arr.length;i++){ const b=arr[i]; if(!b.pop) continue; const dx=b.x-x,dy=b.y-y,d=Math.hypot(dx,dy); if(d<b.r+8 && d<hd){ hd=d; hit=b; arrHit=arr; idx=i; } } };
+    test(this.bubbles); test(this.cursors);
+    if(hit){ this.popBubble(hit.x,hit.y,hit.r); arrHit.splice(idx,1); }
+  }
+  popBubble(x,y,r){ const n=7+Math.floor(r*0.4); for(let i=0;i<n;i++){ const ang=Math.random()*6.283, sp=1+Math.random()*3.2; this.pops.push({ x,y, vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp-0.5, r:1+Math.random()*2.4, alpha:0.85, life:0 }); } this.playPop(r); }
+
+  // ---------------- audio ----------------
+  ensureAudio(){ if(this.actx) return; try{ this.actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ this.actx=null; } if(this.actx&&this.actx.state==='suspended') this.actx.resume(); }
+  playPop(r){ this.ensureAudio(); const ac=this.actx; if(!ac) return; const now=ac.currentTime;
+    const base=520-(r||10)*4 + Math.random()*40; // bigger bubble = lower
+    const o=ac.createOscillator(), g=ac.createGain(), f=ac.createBiquadFilter();
+    o.type='sine'; o.frequency.setValueAtTime(base*1.6,now); o.frequency.exponentialRampToValueAtTime(base*0.7,now+0.09);
+    f.type='lowpass'; f.frequency.setValueAtTime(2200,now);
+    g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.12,now+0.008); g.gain.exponentialRampToValueAtTime(0.0001,now+0.16);
+    o.connect(f); f.connect(g); g.connect(ac.destination); o.start(now); o.stop(now+0.18);
+    // soft glassy click transient
+    const o2=ac.createOscillator(), g2=ac.createGain(); o2.type='triangle'; o2.frequency.setValueAtTime(base*2.6,now); g2.gain.setValueAtTime(0.05,now); g2.gain.exponentialRampToValueAtTime(0.0001,now+0.05); o2.connect(g2); g2.connect(ac.destination); o2.start(now); o2.stop(now+0.06);
+  }
+
+  onSubmit=async(e)=>{ e.preventDefault();
+    if(this.state.sending) return;
+    const name=((this.nameRef.current&&this.nameRef.current.value)||'').trim();
+    const email=((this.emailRef.current&&this.emailRef.current.value)||'').trim();
+    const url=((this.urlRef.current&&this.urlRef.current.value)||'').trim();
+    const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+    if(!name||!emailOk){ this.setState({errName:!name, errEmail:!emailOk, emailMsg:'Enter a valid email address.', sendErr:false}); const f=(!name?this.nameRef:this.emailRef).current; if(f) f.focus(); return; }
+    this.setState({errName:false,errEmail:false,sendErr:false,sending:true});
+    // 1) does the address even exist? verify its domain accepts mail (MX lookup via DNS-over-HTTPS)
+    const domain=email.split('@')[1]; let domainOk=true;
+    try{ const r=await fetch('https://dns.google/resolve?name='+encodeURIComponent(domain)+'&type=MX');
+      if(r.ok){ const j=await r.json(); domainOk=Array.isArray(j.Answer)&&j.Answer.some(a=>a.type===15); } }
+    catch(_){ domainOk=true; /* lookup blocked (e.g. sandbox) — don't false-reject a real address */ }
+    if(!domainOk){ this.setState({sending:false, errEmail:true, emailMsg:'That address doesn\u2019t exist \u2014 please check it.'}); const f=this.emailRef.current; if(f) f.focus(); return; }
+    // 2) deliver the inquiry via Formspree -> contact@infawebdesign.com
+    try{
+      const res=await fetch('https://formspree.io/f/xgojlkpn',{ method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({ name:name, email:email, website:url||'(none provided)', message:'New project inquiry submitted from the InfaWeb website.', _subject:'New InfaWeb project inquiry' }) });
+      if(!res.ok) throw new Error('http '+res.status);
+      this.formBurst=this.t; this.ensureAudio(); this.setState({sending:false,submitted:true});
+    }catch(err){ this.setState({sending:false, sendErr:true}); }
+  }
+  onNameInput=()=>{ if(this.state.errName) this.setState({errName:false}); }
+  onEmailInput=()=>{ if(this.state.errEmail) this.setState({errEmail:false}); }
+  goHome=(e)=>{ if(e&&e.preventDefault)e.preventDefault(); this.transition.active=false; this.world=0; this.prog=0; this.targetProg=0; }
+  toggleNav=()=>{ this.setState(s=>({navOpen:!s.navOpen})); }
+  closeNav=()=>{ this.setState({navOpen:false}); }
+  navContact=(e)=>{ this.goContact(e); this.setState({navOpen:false}); }
+
+  renderVals(){
+    return {
+      rootRef:this.rootRef, stageRef:this.stageRef, glRef:this.glRef, fxRef:this.fxRef, vidRef:this.vidRef,
+      urlRef:this.urlRef, emailRef:this.emailRef, nameRef:this.nameRef, ctaRef:this.ctaRef, panelRef:this.panelRef,
+      boardRigRef:this.boardRigRef, boardSwingRef:this.boardSwingRef,
+      hintRef:this.hintRef, dot0Ref:this.dot0Ref, dot1Ref:this.dot1Ref, dot2Ref:this.dot2Ref,
+      onSubmit:this.onSubmit, goContact:this.goContact, goHome:this.goHome, navOpen:this.state.navOpen, toggleNav:this.toggleNav, closeNav:this.closeNav, navContact:this.navContact, onNameInput:this.onNameInput, onEmailInput:this.onEmailInput,
+      errName:this.state.errName, errEmail:this.state.errEmail,
+      sending:this.state.sending, sendErr:this.state.sendErr, emailMsg:this.state.emailMsg||'Enter a valid email address.',
+      submitted:this.state.submitted, notSubmitted:!this.state.submitted
+    };
+  }
+}
+</script>
+</body>
+</html>
